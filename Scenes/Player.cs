@@ -1,15 +1,15 @@
 using Godot;
-using System;
 
 public class Player : Node2D
 {
-    [Export] public int Speed = 200;
-    [Export] public int RotationSpeed = 200;
+    [Export] public int SlowSpeed = 75;
+    [Export] public int DefaultSpeed = 150;
+    [Export] public int FastSpeed = 300;
+    [Export] public int TurnSpeed = 10;
     
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
-        Console.WriteLine("Actions: " +  InputMap.GetActions());
     }
 
   // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -28,22 +28,23 @@ public class Player : Node2D
           rotation += 1f;
       }
 
-      Rotation += rotation * RotationSpeed * delta;
+      Rotation += rotation * TurnSpeed * delta;
       
       if (Input.IsActionPressed("ui_up"))
       {
           // GAS GAS GAS
-          forwardMovement += 1f;
+          forwardMovement = FastSpeed;
       }
-      
-      if (Input.IsActionPressed("ui_down"))
+      else if (Input.IsActionPressed("ui_down"))
       {
           // BRAKE BRAKE BRAKE
-          forwardMovement -= 1f;
+          forwardMovement = SlowSpeed;
+      }
+      else
+      {
+          forwardMovement = DefaultSpeed;
       }
 
-      Position += new Vector2(Mathf.Cos(Rotation), Mathf.Sin(Rotation)) * forwardMovement * Speed * delta;
-      // apply all that shit
-      // Position = 
+      Position += new Vector2(Mathf.Cos(Rotation), Mathf.Sin(Rotation)) * forwardMovement * delta;
   }
 }
